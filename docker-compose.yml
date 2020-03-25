@@ -1,0 +1,75 @@
+version: '2'
+
+volumes:
+  postgres_database:
+    driver: local
+
+services:
+
+  postgres:
+    image: postgres:latest
+    environment:
+      PGDATA: /var/lib/postgresql/data/b2share
+      POSTGRES_DB: ${B2SHARE_POSTGRESQL_DBNAME}
+      POSTGRES_USER: ${B2SHARE_POSTGRESQL_USER}
+      POSTGRES_PASSWORD: ${B2SHARE_POSTGRESQL_PASSWORD}
+    restart: always
+    volumes:
+    - postgres_database:/var/lib/postgresql/data/b2share
+
+  elasticsearch:
+    image: elasticsearch:7.6.1
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  redis:
+    image: redis:latest
+
+  mq:
+    image: rabbitmq:latest
+    restart: "always"
+    environment:
+      - "RABBITMQ_DEFAULT_USER=b2share"
+      - "RABBITMQ_DEFAULT_PASS=b2share"
+
+  b2share:
+    build:
+      context: .
+      dockerfile: dockerize/Dockerfile.python3.6
+    environment:
+      - "B2ACCESS_CONSUMER_KEY=${B2ACCESS_CONSUMER_KEY}"
+      - "B2ACCESS_SECRET_KEY=${B2ACCESS_SECRET_KEY}"
+      - "USE_STAGING_B2ACCESS=${USE_STAGING_B2ACCESS}"
+      - "B2SHARE_SECRET_KEY=${B2SHARE_SECRET_KEY}"
+      - "B2SHARE_JSONSCHEMAS_HOST=${B2SHARE_JSONSCHEMAS_HOST}"
+      - "INIT_DB_AND_INDEX=${INIT_DB_AND_INDEX}"
+      - "LOAD_DEMO_COMMUNITIES_AND_RECORDS=${LOAD_DEMO_COMMUNITIES_AND_RECORDS}"
+      - "B2SHARE_PREFERRED_URL_SCHEME=${B2SHARE_PREFERRED_URL_SCHEME}"
+      - "B2SHARE_SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://${B2SHARE_POSTGRESQL_USER}:${B2SHARE_POSTGRESQL_PASSWORD}@postgres:5432/${B2SHARE_POSTGRESQL_DBNAME}'"
+      - "B2SHARE_CACHE_REDIS_HOST='redis'"
+      - "B2SHARE_CACHE_REDIS_URL='redis://redis:6379/0'"
+      - "B2SHARE_ACCOUNTS_SESSION_REDIS_URL='redis://redis:6379/1'"
+      - "B2SHARE_BROKER_URL='amqp://${B2SHARE_RABBITMQ_USER}:${B2SHARE_RABBITMQ_PASS}@mq:5672/'"
+      - "B2SHARE_CELERY_BROKER_URL='amqp://${B2SHARE_RABBITMQ_USER}:${B2SHARE_RABBITMQ_PASS}@mq:5672/'"
+      - "B2SHARE_CELERY_RESULT_BACKEND='redis://redis:6379/2'"
+      - "B2SHARE_SEARCH_ELASTIC_HOSTS='elasticsearch'"
+      - "B2SHARE_UI_PATH=/b2share/webui/app"
+      - "PYTHONPATH=/b2share:/b2share/demo"
+    ports:
+      - "5000:5000"
+      - "1984:1984"
+    links:
+      - elasticsearch
+      - postgres
+      - redis
+      - mq
+    command:
+      tail -f /dev/null

@@ -91,8 +91,8 @@ import sys
 from flask import Flask
 from invenio_base.app import create_app_factory
 from invenio_config import create_conf_loader
-from werkzeug.wsgi import DispatcherMiddleware
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from . import config
 

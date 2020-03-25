@@ -25,7 +25,6 @@
 
 from flask import url_for, g
 from b2share.modules.records.providers import RecordUUIDProvider
-from invenio_pidrelations.contrib.versioning import PIDVersioning
 from invenio_pidstore.models import PIDStatus
 
 

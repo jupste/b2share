@@ -30,43 +30,56 @@ import sys
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
+db_version = '>=1.0.4'
+search_version = '>=1.3.0'
+elasticsearch = '>=7.1.0'
+
 install_requires = [
-    'b2handle>=1.1.1,<2.0.0',
-    'elasticsearch<3.0.0,>=2.0.0',
-    'elasticsearch-dsl<3.0.0,>=2.0.0',
+
+    'b2handle',
+    'elasticsearch{}'.format(elasticsearch),
+    'elasticsearch-dsl{}'.format(elasticsearch),
+
+    'Flask>=1.0.4',
+    'Flask-Login<0.5.0',
+
+    'flask_principal',
+    'psycopg2',
+
+    'invenio-app',
+    'invenio-base',
+    'invenio-cache',
+    'invenio-celery',
+    'invenio-config',
+    'invenio-i18n',
+    'invenio-access',
+    'invenio-oauthclient',
+    'invenio_oauth2server',
+    'invenio_records_rest',
+    'invenio_records',
+    'invenio_records_files',
+    'invenio_pidrelations',
+    'invenio_oaiserver',
+    'invenio_marc21',
+    'invenio_accounts_rest',
+    'invenio_queues',
+    'invenio_stats',
+
+    'invenio-deposit>=v1.0.0.a11',
+    'invenio-db[postgresql,versioning]>=1.0.4',
+    'invenio-search>=1.3.0',
+
+    'Werkzeug<0.16.0',
+
+    'urllib3<1.25,>=1.21.1',
+
     'datacite>=0.3.0',
     'dcxml>=0.1.0',
     'doschema>=1.0.0a1',
     'dojson>=1.2.1',
     'easywebdav2>=1.3.0',
-    'Flask-Login<0.4,>=0.3.2',
+    'Flask-Login>=0.3.2',
     'httplib2>=0.9.2',
-    'invenio-access>=1.0.0a11,<1.1.0',
-    'invenio-accounts>=1.0.0b9,<1.1.0',
-    'invenio-accounts-rest>=1.0.0a4,<1.1.0',
-    'invenio-base>=1.0.0a14,<1.1.0',
-    'invenio-celery>=1.0.0b1,<1.1.0',
-    'invenio-config>=1.0.0b2,<1.1.0',
-    'invenio-db[postgresql,versioning]>=1.0.0b7,<1.1.0',
-    'invenio-deposit>=1.0.0a8,<1.1.0',
-    'invenio-files-rest>=1.0.0a21,<1.1.0',
-    'invenio-mail>=1.0.0b1,<1.1.0',
-    'invenio-marc21>=1.0.0a3',
-    'invenio-oaiserver>=1.0.0a9,<1.1.0',
-    'invenio-oauthclient>=1.0.0a13,<1.1.0',
-    'invenio-oauth2server>=1.0.0a14,<1.1.0',
-    'invenio-pidstore>=v1.0.0b1,<1.1.0',
-    'invenio-pidrelations>=v1.0.0a4,<1.1.0',
-    'invenio-query-parser>=0.6.0,<1.1.0',
-    'invenio-records>=1.0.0b1,<1.1.0',
-    'invenio-records-rest>=1.0.0a17,<1.1.0',
-    'invenio-records-files>=1.0.0a9,<1.1.0',
-    'invenio-rest[cors]>=1.0.0a10,<1.1.0',
-    'invenio-search>=1.0.0a10,<1.1.0',
-    'invenio-stats>=1.0.0a8',
-    'invenio-logging>=1.0.0a3',
-    'invenio-indexer>=1.0.0a9',
-    'jsonresolver[jsonschema]>=0.2.1',
 ]
 
 if sys.version_info < (3, 4):
@@ -90,19 +103,8 @@ tests_require = [
 ]
 
 extras_require = {
-    'mysql': [
-        'pymysql>=0.6.7',
-    ],
     'postgresql': [
         'psycopg2>=2.6.1',
-    ],
-    'docs': [
-        "Sphinx>=1.3",
-        'sphinxcontrib-httpdomain>=1.4.0',
-    ],
-    'development': [
-        'Flask-DebugToolbar>=0.9',
-        'setuptools-bower>=0.2'
     ],
     'tests': tests_require,
 }

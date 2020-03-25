@@ -1,6 +1,6 @@
 {
   "mappings": {
-    "deposit": {
+    "record": {
       "date_detection": false,
       "numeric_detection": false,
       "_all": {
