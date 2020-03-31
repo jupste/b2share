@@ -422,6 +422,7 @@ TRAINING_SITE_LINK = ""
 
 STATS_EVENTS = {
     'file-download': dict(
+        templates='invenio_stats.contrib.file_download',
         signal='invenio_files_rest.signals.file_downloaded',
         event_builders=[
             'invenio_stats.contrib.event_builders.file_download_event_builder'
@@ -441,7 +442,9 @@ STATS_EVENTS = {
 }
 
 STATS_AGGREGATIONS = {
-    'file-download-agg': {},
+    'file-download-agg': {
+        'templates':'invenio_stats.contrib.aggregations.aggr_file_download'
+    }
 }
 
 STATS_QUERIES = {
