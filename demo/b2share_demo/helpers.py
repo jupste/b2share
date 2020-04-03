@@ -57,9 +57,7 @@ from b2share.modules.communities import Community
 from b2share.modules.schemas import BlockSchema, CommunitySchema
 from b2share.modules.schemas.helpers import resolve_schemas_ref
 from b2share.modules.records.providers import RecordUUIDProvider
-
-
-
+from b2share.modules.records.indexer import record_to_index
 
 def load_demo_data(path, verbose=0):
     """Load a demonstration located at the given path.
@@ -202,9 +200,8 @@ def _create_community_schemas(communities, verbose):
 
 def _create_records(path, verbose):
     """Create demo records."""
-    indexer = RecordIndexer(
-        record_to_index=lambda record: ('records', 'record')
-    )
+    indexer = RecordIndexer(record_to_index=record_to_index)
+
     if verbose > 0:
         click.secho('Creating records', fg='yellow', bold=True)
     with db.session.begin_nested():

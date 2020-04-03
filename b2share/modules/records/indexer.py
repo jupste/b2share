@@ -33,13 +33,23 @@ from invenio_pidrelations.contrib.versioning import PIDNodeVersioning
 from .utils import is_deposit, is_publication
 from .providers import RecordUUIDProvider
 
+from invenio_search import current_search_client
 
 def record_to_index(record):
     """Route the given record to the right index and document type."""
+
+    def doc_type(alias):
+        try:
+            return list(current_search_client.indices.get_alias(index=alias, ignore=[404]).keys())[0]
+        except:
+            return alias
+
     if is_deposit(record.model):
-        return 'deposits-deposits', 'deposit'
+        alias = 'deposits'
+        return 'my_'+alias, doc_type(alias)
     elif is_publication(record.model):
-        return 'records', 'record'
+        alias = 'records'
+        return 'my_'+alias, doc_type(alias)
     else:
         raise ValueError('Invalid record. It is neither a deposit'
                          ' nor a publication')
@@ -71,7 +81,7 @@ def indexer_receiver(sender, json=None, record=None, index=None,
         parent_pid = b2share_parent_pid_fetcher(None, record).pid_value
         pid = b2share_record_uuid_fetcher(None, record).pid_value
         last_version_pid = PIDNodeVersioning(
-            parent=RecordUUIDProvider.get(parent_pid).pid
+            pid=RecordUUIDProvider.get(parent_pid).pid
         ).last_child
         json['_internal']['is_last_version'] = \
             (last_version_pid.pid_value == pid)

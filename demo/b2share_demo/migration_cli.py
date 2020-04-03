@@ -43,7 +43,7 @@ from invenio_records.api import Record
 from .migration import (download_v1_data, process_v1_record, main_diff,
                         make_v2_index, records_endpoint, directly_list_v2_record_ids)
 
-
+from b2share.modules.records.indexer import record_to_index
 
 @click.group()
 def migrate():
@@ -86,7 +86,8 @@ def import_v1_data(verbose, download, token, download_directory,limit):
             limit = int(limit)
             click.secho("Limiting to %d records for debug purposes" % limit)
         download_v1_data(token, download_directory, logfile, limit)
-    indexer = RecordIndexer(record_to_index=lambda record: ('records', 'record'))
+    
+    indexer = RecordIndexer(record_to_index=record_to_index)
     dirlist = os.listdir('.')
 
     click.secho("-----------")

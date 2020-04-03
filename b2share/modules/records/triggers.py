@@ -48,8 +48,11 @@ def register_triggers(app):
 
 
 # TODO(edima): replace this check with explicit permissions
-def check_record_immutable_fields(record):
+def check_record_immutable_fields(sender, *args, **kwargs):
     """Checks that the previous community and owner fields are preserved"""
+
+    record = kwargs['record']
+
     previous_md = record.model.json
     for field in ['community', '$schema']:
         if previous_md.get(field) != record.get(field):
@@ -59,16 +62,22 @@ def check_record_immutable_fields(record):
             ])
 
 
-def index_record_trigger(record):
+def index_record_trigger(sender, *args, **kwargs):
     """Index the given record if it is a publication."""
+
+    record = kwargs['record']
+    
     if is_publication(record.model):
         # index the record synchronously as an asynchronous task will not
         # find the record if it runs before this transaction's commit.
         RecordIndexer().index(record)
 
 
-def unindex_record_trigger(record):
+def unindex_record_trigger(sender, *args, **kwargs):
     """Unindex the given record if it is a publication."""
+
+    record = kwargs['record']
+
     if is_publication(record.model):
         # The indexer requires that the record still exists in the database
         # when it is removed from the search index. Thus we have to unindex it

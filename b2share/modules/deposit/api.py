@@ -162,7 +162,7 @@ class Deposit(InvenioDeposit):
     @property
     def versioning(self):
         """Return the parent versionning PID."""
-        return PIDNodeVersioning(child=self.record_pid)
+        return PIDNodeVersioning(pid=self.record_pid)
 
     @classmethod
     def create(cls, data, id_=None, version_of=None):
@@ -215,7 +215,7 @@ class Deposit(InvenioDeposit):
 
         # Mint the deposit with the parent PID
         data['_pid'] = [{
-            'value': version_master.pid,
+            'value': version_master.pid.pid_value,
             'type': RecordUUIDProvider.parent_pid_type,
         }]
         if 'community' not in data or not data['community']:
@@ -358,10 +358,13 @@ class Deposit(InvenioDeposit):
 
             # Retrieve previous version in order to reindex it later.
             previous_version_pid = None
+            parent_pid = self.versioning.parents.first()
+            version_master = PIDNodeVersioning(pid=parent_pid)
+
             # Save the previous "last" version for later use
-            if self.versioning.parent.status == PIDStatus.REDIRECTED and \
-                    self.versioning.has_children:
-                previous_version_pid = self.versioning.last_child
+            if parent_pid.status == PIDStatus.REDIRECTED and \
+                    version_master.has_children:
+                previous_version_pid = version_master.last_child
                 previous_version_uuid = str(RecordUUIDProvider.get(
                     previous_version_pid.pid_value
                 ).pid.object_uuid)
@@ -520,7 +523,8 @@ def find_version_master_and_previous_record(version_of):
     except PIDDoesNotExistError as e:
         raise RecordNotFoundVersioningError() from e
 
-    version_master = PIDNodeVersioning(child=child_pid)
+    parent_pid = PIDNodeVersioning(pid=child_pid).parents.first()
+    version_master = PIDNodeVersioning(pid=parent_pid)
 
     prev_pid = version_master.last_child
     assert prev_pid.pid_type == RecordUUIDProvider.pid_type
