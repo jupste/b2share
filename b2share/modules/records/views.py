@@ -207,7 +207,7 @@ def create_url_rules(endpoint, list_route=None, item_route=None,
 
     list_view = B2ShareRecordsListResource.as_view(
         RecordsListResource.view_name.format(endpoint),
-        resolver=resolver,
+        # resolver=resolver,
         minter_name=pid_minter,
         pid_type=pid_type,
         pid_fetcher=pid_fetcher,
@@ -341,6 +341,7 @@ class B2ShareRecordsListResource(RecordsListResource):
         pid = self.minter(record_uuid, data=data)
 
         # Create record
+        
         record = self.record_class.create(data, id_=record_uuid,
                                           version_of=version_of)
         db.session.commit()

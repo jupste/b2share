@@ -132,7 +132,7 @@ def records_rest_url_rules(endpoint, list_route=None, item_route=None,
 
     item_view = DepositResource.as_view(
         RecordResource.view_name.format(endpoint),
-        resolver=resolver,
+        # resolver=resolver,
         read_permission_factory=read_permission_factory,
         update_permission_factory=update_permission_factory,
         delete_permission_factory=delete_permission_factory,

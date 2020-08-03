@@ -257,6 +257,8 @@ class Deposit(InvenioDeposit):
             create_b2safe_file(data['external_pids'], bucket)
             del data['external_pids']
 
+        import wdb
+        wdb.set_trace()
         deposit = super(Deposit, cls).create(data, id_=id_)
         db.session.add(bucket)
         db.session.add(RecordsBuckets(

@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Baltic TRAM Metadata Schema",
+    "description": "This is the blueprint of the metadata block specific for Baltic TRAM community",
+    "type": "object",
+    "properties": {
+        "nace_code": {
+            "title": "NACE code and industry name",
+            "description": "NACE code and industry name",
+            "type": "string"
+        },
+        "research_field": {
+            "title": "Materials research field",
+            "description": "Materials research field",
+            "type": "string"
+        }
+    },
+    "b2share": {
+      "presentation": {
+        "major": [
+          "nace_code", 
+          "research_field"
+        ]
+      }
+    },
+    "additionalProperties": false
+}

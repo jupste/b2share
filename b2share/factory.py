@@ -144,8 +144,8 @@ def create_app(**kwargs):
     if api.config.get('WSGI_PROXIES'):
         wsgi_proxies = api.config.get('WSGI_PROXIES')
         assert(wsgi_proxies > 0)
-        api.wsgi_app = ProxyFix(api.wsgi_app,
-                                num_proxies=api.config['WSGI_PROXIES'])
+        api.wsgi_app = ProxyFix(api.wsgi_app)
+        #,                                num_proxies=api.config['WSGI_PROXIES'])
 
     check_configuration(api.config, api.logger)
 

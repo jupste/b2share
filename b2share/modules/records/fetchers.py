@@ -33,6 +33,8 @@ FetchedPID = namedtuple('FetchedPID', ['provider', 'object_uuid',
 
 def b2share_record_uuid_fetcher(record_uuid, data):
     """Fetch a record's identifiers."""
+    import wdb
+    wdb.set_trace()
     return FetchedPID(
         provider=RecordUUIDProvider,
         object_uuid=record_uuid,
@@ -44,6 +46,8 @@ def b2share_record_uuid_fetcher(record_uuid, data):
 
 def b2share_parent_pid_fetcher(record_uuid, data):
     """Fetch record's parent version persistent identifier."""
+    import wdb
+    wdb.set_trace()
     return FetchedPID(
         provider=RecordUUIDProvider,
         # The record_uuid is not relevant for the parent pids

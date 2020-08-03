@@ -34,7 +34,7 @@ def versions_url(pid_value):
                    pid_value=pid_value, _external=True)
 
 
-def deposit_links_factory(pid):
+def deposit_links_factory(pid, **kwargs):
     """Factory for record links generation."""
     deposit_endpoint = 'b2share_deposit_rest.{0}_item'.format(pid.pid_type)
     record_endpoint = 'b2share_records_rest.{0}_item'.format(

@@ -32,13 +32,13 @@ from setuptools.command.test import test as TestCommand
 
 db_version = '>=1.0.4'
 search_version = '>=1.3.0'
-elasticsearch = '>=7.1.0'
+elasticsearch = '>=6.8.11'
 
 install_requires = [
 
     'b2handle',
-    'elasticsearch{}'.format(elasticsearch),
-    'elasticsearch-dsl{}'.format(elasticsearch),
+    'elasticsearch>=6.0.0,<7.0.0',
+    'elasticsearch-dsl>=6.0.0,<6.2.0',
 
     'Flask>=1.0.4',
     'Flask-Login<0.5.0',
@@ -67,10 +67,9 @@ install_requires = [
 
     'invenio-deposit>=v1.0.0.a11',
     'invenio-db[postgresql,versioning]>=1.0.4',
-    'invenio-search>=1.3.0',
-
-    'Werkzeug<0.16.0',
-
+    'invenio-search[elasticsearch6]>=1.3.0',
+    'Werkzeug<0.16.1',
+    'marshmallow==2.21.0',
     'urllib3<1.25,>=1.21.1',
 
     'datacite>=0.3.0',
@@ -197,7 +196,7 @@ setup(
             'invenio_pidrelations = invenio_pidrelations:InvenioPIDRelations',
         ],
         'invenio_base.api_blueprints': [
-            'invenio_oauthclient = invenio_oauthclient.views.client:blueprint',
+            #'invenio_oauthclient = invenio_oauthclient.views.client:blueprint',
             'b2share_communities = '
             'b2share.modules.communities.views:blueprint',
             'invenio_oaiserver = invenio_oaiserver.views.server:blueprint',

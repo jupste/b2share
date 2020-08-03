@@ -46,8 +46,18 @@ from b2share.modules.records.loaders import record_patch_input_loader
 from b2share.modules.users.loaders import (
     account_json_loader, account_json_patch_loader,
 )
+from invenio_search import RecordsSearch
+
+from invenio_search.config import SEARCH_ELASTIC_HOSTS
+SEARCH_ELASTIC_HOSTS = 'http://localhost:9200'
 
 
+
+# SEARCH_ELASTIC_HOSTS.append(dict(host="localhost", port=9200, use_ssl=False, ssl_show_warn=False))
+
+B2SHARE_SEARCH_ELASTIC_HOSTS='http://localhost:9200'
+SEARCH_CLIENT_CONFIG = None
+SEARCH_ELASTIC_HOSTS = None
 SUPPORT_EMAIL = None # must be setup in the local instances
 MAIL_SUPPRESS_SEND = True # this should be removed on a real instance
 MIGRATION_LOGFILE = '/tmp/migration.log' #to log migration exceptions
@@ -69,7 +79,7 @@ B2SHARE_RECORDS_REST_ENDPOINTS = dict(
         pid_minter='b2dep',
         pid_fetcher='b2rec',
         record_class='b2share.modules.records.api:B2ShareRecord',
-        search_class=B2ShareRecordsSearch,
+        search_class=RecordsSearch,
         record_serializers={
             'application/json': ('b2share.modules.records.serializers'
                                  ':json_v1_response'),
@@ -359,7 +369,7 @@ CFG_FAIL_ON_MISSING_FILE_PID = False
 
 # for manual testing purposes, FAKE_EPIC_PID can be set to True
 # in which case a fake epic pid will be generated for records
-# FAKE_EPIC_PID = False
+FAKE_EPIC_PID = True
 
 
 # DOI config
@@ -376,7 +386,7 @@ PIDSTORE_DATACITE_PASSWORD = "XXXX"
 
 # for manual testing purposes, FAKE_DOI can be set to True
 # in which case a fake DOI will be generated for records
-# FAKE_DOI = False
+FAKE_DOI = True
 
 
 B2DROP_SERVER = {
