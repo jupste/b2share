@@ -40,7 +40,7 @@ from invenio_files_rest.models import ObjectVersion
 from invenio_records_files.api import Record
 from invenio_pidstore.resolver import Resolver
 from invenio_pidstore.models import PersistentIdentifier
-from invenio_pidrelations.contrib.versioning import PIDVersioning
+from invenio_pidrelations.contrib.versioning import PIDNodeVersioning as PIDVersioning
 from b2share.modules.records.api import B2ShareRecord
 from b2share.modules.deposit.api import Deposit
 

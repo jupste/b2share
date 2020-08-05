@@ -20,7 +20,8 @@ services:
       - 5432:5432
 
   elasticsearch:
-    image: elasticsearch:6.8.11
+    #image: elasticsearch:6.8.11
+    image: elasticsearch:7.8.1
     environment:
       - bootstrap.memory_lock=true
       - discovery.type=single-node

@@ -41,8 +41,7 @@ from b2share.modules.records.api import B2ShareRecord
 from b2share.modules.deposit.api import Deposit, copy_data_from_previous
 from b2share.modules.deposit.minters import b2share_deposit_uuid_minter
 from b2share_unit_tests.helpers import create_deposit, pid_of
-from invenio_pidrelations.contrib.versioning import PIDVersioning
-
+from invenio_pidrelations.contrib.versioning import PIDNodeVersioning as PIDVersioning
 
 def test_change_record_schema_fails(app, test_records):
     """Test updating the $schema field fails."""

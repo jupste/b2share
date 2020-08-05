@@ -38,7 +38,7 @@ from b2share.modules.upgrade.cli import run
 from invenio_accounts.models import User
 from invenio_records_files.api import Record
 from invenio_pidstore.models import PersistentIdentifier, PIDStatus
-from invenio_pidrelations.contrib.versioning import PIDVersioning
+from invenio_pidrelations.contrib.versioning import PIDNodeVersioning as PIDVersioning
 from b2share.modules.records.fetchers import b2share_parent_pid_fetcher, \
     b2share_record_uuid_fetcher
 from b2share.modules.records.providers import RecordUUIDProvider

@@ -36,35 +36,36 @@ cache:
   - pip
 
 env:
-  - REQUIREMENTS=release SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://localhost:5432/b2sharedb REXTRAS=all ES_VERSION=2.3.3
-  - REQUIREMENTS=current REXTRAS=all ES_VERSION=2.3.3
-  - REQUIREMENTS=devel REXTRAS=all ES_VERSION=2.3.3
+  - REQUIREMENTS=release SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://localhost:5432/b2sharedb REXTRAS=all ES_VERSION=7.8.1
+  - REQUIREMENTS=current REXTRAS=all ES_VERSION=7.8.1
+  - REQUIREMENTS=devel REXTRAS=all ES_VERSION=7.8.1
 matrix:
   fast_finish: true
   allow_failures:
-    - env: REQUIREMENTS=current REXTRAS=all ES_VERSION=2.3.3
-    - env: REQUIREMENTS=devel REXTRAS=all ES_VERSION=2.3.3
+    - env: REQUIREMENTS=current REXTRAS=all ES_VERSION=7.8.1
+    - env: REQUIREMENTS=devel REXTRAS=all ES_VERSION=7.8.1
 
 python:
   # - "3.4" # b2handle does not support it
-  - "3.5"
+  - "3.6"
 
 sudo: false
 
 before_install:
   # Install elasticsearch
   - mkdir /tmp/elasticsearch
-  - wget -O - https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
-  # install the mapper-attachments plugin
-  - yes | /tmp/elasticsearch/bin/plugin install --verbose mapper-attachments
+#  - wget -O - https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
+  - wget -O - https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-${ES_VERSION}-linux-x86_64.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
+
+  - "/tmp/elasticsearch/bin/elasticsearch > /tmp/local-es.log &"
   # Start elasticsearch
   - /tmp/elasticsearch/bin/elasticsearch --daemonize --path.data /tmp
   - "travis_retry pip install --upgrade pip setuptools py"
-  - "travis_retry pip install twine wheel coveralls requirements-builder"
+  - "travis_retry pip install twine wheel coveralls requirements-builder configparser"
   - "requirements-builder --level=pypi setup.py > .travis-current-requirements.txt"
   - "cp requirements.txt .travis-release-requirements.txt"
   - "requirements-builder --level=dev --req requirements-devel.txt setup.py > .travis-devel-requirements.txt"
-
+  
 install:
   - "travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt"
   - "travis_retry pip install -e .[${REXTRAS}]"
@@ -72,6 +73,13 @@ install:
   - "travis_retry cd demo"
   - "travis_retry pip install -e ."
   - "travis_retry cd $TRAVIS_BUILD_DIR"
+  - pip freeze 
+
+before_script:
+  # Allow ES to start
+  - sleep 10
+  - curl http://127.0.0.1:9200 && echo "Elasticsearch is up!" || cat /tmp/local-es.log
+
 
 script:
   - "./run-tests.sh"

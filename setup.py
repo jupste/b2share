@@ -32,13 +32,15 @@ from setuptools.command.test import test as TestCommand
 
 db_version = '>=1.0.4'
 search_version = '>=1.3.0'
-elasticsearch = '>=6.8.11'
 
 install_requires = [
 
     'b2handle',
-    'elasticsearch>=6.0.0,<7.0.0',
-    'elasticsearch-dsl>=6.0.0,<6.2.0',
+    'elasticsearch>=7.0.0,<8.0.0',
+    'elasticsearch-dsl>=7.0.0,<8.0.0'
+    # Enable for ES6 compatibility
+    #'elasticsearch>=6.0.0,<7.0.0',
+    #'elasticsearch-dsl>=6.0.0,<6.2.0',
 
     'Flask>=1.0.4',
     'Flask-Login<0.5.0',
@@ -67,11 +69,13 @@ install_requires = [
 
     'invenio-deposit>=v1.0.0.a11',
     'invenio-db[postgresql,versioning]>=1.0.4',
-    'invenio-search[elasticsearch6]>=1.3.0',
+    # Enable for ES6 compatibility
+    #'invenio-search[elasticsearch6]>=1.3.0',
+    'invenio-search[elasticsearch7]>=1.3.0',
     'Werkzeug<0.16.1',
     'marshmallow==2.21.0',
     'urllib3<1.25,>=1.21.1',
-
+    'invenio-pidrelations==v1.0.0a6',
     'datacite>=0.3.0',
     'dcxml>=0.1.0',
     'doschema>=1.0.0a1',
