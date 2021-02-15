@@ -131,6 +131,16 @@ const Record = React.createClass({
         return state;
     },
 
+    catchMatomoEvent(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        if (window._paq) {
+            const metadata = this.props.record.get('metadata') || Map();
+            const doi = metadata.get('DOI').replace("http://doi.org/", "");
+            window._paq.push(['trackEvent', 'b2share', event.type, doi]);
+        }
+    },
+
     getB2Notes(host, target, pids, sources) {
         var self = this;
 
@@ -159,7 +169,7 @@ const Record = React.createClass({
 
     componentDidMount() {
         // this is set async in parent
-        if (this.state.b2noteUrl == "") {
+        if (this.state.b2noteUl == "") {
             return;
         }
 
@@ -353,7 +363,7 @@ const Record = React.createClass({
                 if (b2noteUrl) {
                     b2noteWidget = <B2NoteWidget file={f} record={this.props.record} notes={this.state.files_notes} showB2NoteWindow={this.showB2NoteWindow} b2noteUrl={b2noteUrl} smallButton={true} style={{display: 'inline-block'}}/>;
                 }
-                return <FileRecordRow key={f.get('key')} file={f} b2noteWidget={b2noteWidget} showDownloads={showDownloads} />
+                return <FileRecordRow key={f.get('key')} file={f} b2noteWidget={b2noteWidget} showDownloads={showDownloads} catchMatomoEvent={this.catchMatomoEvent} />
             }
             fileComponent =
                 <div className='fileList'>
@@ -502,11 +512,7 @@ const Record = React.createClass({
     },
     
     componentDidMount() {
-        const record = this.props.record;
-        const metadata = record.get('metadata') || Map();
-        const doi = metadata.get('DOI').replace("http://doi.org/", "");
-        //window._paq.push(['trackPageView']);
-        window._paq.push(['trackEvent', 'b2share', 'recordview', doi]);
+        this.catchMatomoEvent(new Event("recordview"));        
     },
     
     render() {

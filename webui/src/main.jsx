@@ -33,10 +33,8 @@ import { CommunityAdmin } from './components/community_admin.jsx'
 
 const piwik = process.env.B2SHARE_WEBUI_MATOMO_URL && process.env.B2SHARE_WEBUI_MATOMO_SITEID ?
     PiwikReactRouter({
-        url: 'https://beta.analytics.openaire.eu',
-        siteId: 268,
-
-        //serverTrackerName: process.env.B2SHARE_WEBUI_MATOMO_SERVERTRACKERNAME
+        url: process.env.B2SHARE_WEBUI_MATOMO_URL,
+        siteId: process.env.B2SHARE_WEBUI_MATOMO_SITEID,
     }) : false;
 
 const AppFrame = React.createClass({
